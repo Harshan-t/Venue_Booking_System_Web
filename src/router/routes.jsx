@@ -1,6 +1,7 @@
+import ProtectedRoute from './pr.jsx'
+
 import App from '../App.jsx'
 import Login from '../pages/login.jsx'
-import Register from '../pages/register.jsx'
 import Dashboardhome from '../pages/dashboardhome.jsx'
 import Staffpage from '../pages/staffpage.jsx'
 import Venue from '../pages/venue.jsx'
@@ -11,7 +12,6 @@ import Addvenue2 from '../pages/addvenue2.jsx'
 import History from '../pages/history.jsx'
 import VenueAnalyticsPage from "../pages/analyticsvenue"
 import Queries from '../pages/query.jsx'
-import User from '../pages/user.jsx'
 
 // user Pages
 import Landingpage from '../pages/Landingpage.jsx'
@@ -21,72 +21,65 @@ import UserDashboard from '../pages/UserDashboard.jsx'
 import UserBookings from '../pages/UserBookings.jsx'
 import UserQueries from '../pages/UserQueries.jsx'
 import UserVenue from '../pages/UserVenue.jsx'
+import { Outlet } from 'react-router-dom'
 
 const routes = [
     {
-        path: '/register',
-        element: <Register />
-    },
-
-    {
-        path: '/login',
+        path: '/',
         element: <Login />
     },
     {
         path: '/dashboardhome',
-        element: <Dashboardhome />
+        element: <ProtectedRoute user={{ role: 'Admin' }} ><Dashboardhome /></ProtectedRoute>
     },
     {
         path: '/staffpage',
-        element: <Staffpage />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><Staffpage /></ProtectedRoute>
     },
     {
         path: '/venue',
-        element: <Venue />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><Venue /></ProtectedRoute>
     },
     {
         path: '/history',
-        element: <History />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><History /></ProtectedRoute>
     },
     {
         path: '/booking',
-        element: <Bookingconformation />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><Bookingconformation /></ProtectedRoute>
     },
     {
         path: '/addvenue1',
-        element: <Addvenue1 />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><Addvenue1 /></ProtectedRoute>
     },
     {
         path: '/addvenue2',
-        element: <Addvenue2 />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><Addvenue2 /></ProtectedRoute>
     },
     {
         path: '/approval',
-        element: <BookingApproval />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><BookingApproval /></ProtectedRoute>
     },
     {
         path: '/query',
-        element: <Queries />
-    },
-    {
-        path: '/userprofile',
-        element: <User />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><Queries /></ProtectedRoute>
     },
     {
         path: '/analyticsvenue',
-        element: <VenueAnalyticsPage />
+        element: <ProtectedRoute user={{ role: 'Admin' }}><VenueAnalyticsPage /></ProtectedRoute>
     },
     // user Pages
     {
         path: '/home',
-        element: <Landingpage />
+        element: <ProtectedRoute user={{ role: 'user' }}><Landingpage /></ProtectedRoute>
     },
     {
         path: '/uservenue',
-        element: <UserVenue />
+        element: <ProtectedRoute user={{ role: 'user' }}><UserVenue /></ProtectedRoute>
     },
     {
         path: '/user',
+        element: <ProtectedRoute user={{ role: 'user' }}><Outlet /></ProtectedRoute>,
         children: [
             {
                 path: 'dashboard',
@@ -104,11 +97,11 @@ const routes = [
     },
     {
         path: '/book',
-        element: <BookVenue />
+        element: <ProtectedRoute user={{ role: 'user' }}><BookVenue /></ProtectedRoute>
     },
     {
         path: '/conformation',
-        element: <Conformation />
+        element: <ProtectedRoute user={{ role: 'user' }}><Conformation /></ProtectedRoute>
     },
 ]
 

@@ -114,7 +114,8 @@ function Venue() {
     return (
       product?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product?.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product?.type?.toLowerCase().includes(searchQuery.toLowerCase())
+      product?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product?.capacity?.toString().includes(searchQuery)
     );
   });
 

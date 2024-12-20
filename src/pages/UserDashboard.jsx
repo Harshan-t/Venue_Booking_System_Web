@@ -56,7 +56,7 @@ function UserDashboard() {
                 <div className="flex justify-center"><hr className="mt-7 mb-7 border-[2px] border-[#d1d1d1] w-[1300px]" ></hr></div>
 
                 <div className="flex justify-center mb-4">
-                    <div className="bg-white min-w-[700px] w-[1100px] h-[240px] border-white shadow-lg rounded-xl py-6 px-6">
+                    <div className="bg-white min-w-[700px] w-[1100px] border-white shadow-lg rounded-xl py-6 px-6">
                         <div className="text-2xl font-[600] mb-6">Today's Events</div>
                         <hr className="border" />
 

@@ -23,10 +23,13 @@ function Login() {
 
             const result = await axios.get('http://localhost:8000/users')
             const userexists = result.data.users.map(user => user.email);
+            const roles = result.data.users.filter(user => user.email === decodedPayload.email)[0].roles;
+            
             if (userexists.includes(decodedPayload.email)) {
                 setUserData({
                     name: decodedPayload.name,
                     email: decodedPayload.email,
+                    role: roles,
                     picture: decodedPayload.picture || '',
                 });
                 if (result.data.users.filter(user => user.email === decodedPayload.email)[0].roles === 'user') {
@@ -120,12 +123,6 @@ function Login() {
                             <a href="#" className="forgot-password">
                                 Forgot password?
                             </a>
-                        </div>
-
-                        <div className="extra-options">
-                            <Link className="create-account" to="/register">
-                                Create account
-                            </Link>
                         </div>
 
                         <p className="legal">

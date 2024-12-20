@@ -1,5 +1,6 @@
 import { FaChurch, FaBuilding, FaGlassCheers, FaHome, FaBriefcase, FaTree } from "react-icons/fa";
-
+import { BsFillBuildingsFill } from "react-icons/bs";
+import { SiGoogleclassroom } from "react-icons/si";
 export const bookingStats = [
   {
     title: "Active Venues",
@@ -36,8 +37,8 @@ export const performanceStats = [
 
 export const strongestVenues = [
   {
-    Icon: FaChurch,
-    title: "Wedding Venues",
+    Icon: BsFillBuildingsFill,
+    title: "Seminar hall",
     percentage: 95,
     width: "w-[172px]",
   },
@@ -48,8 +49,8 @@ export const strongestVenues = [
     width: "w-[172px]",
   },
   {
-    Icon: FaGlassCheers,
-    title: "MS conference hall",
+    Icon: BsFillBuildingsFill,
+    title: "Auditorium",
     percentage: 89,
     width: "w-[141px]",
   },
@@ -69,8 +70,8 @@ export const weakestVenues = [
     width: "w-[166px]",
   },
   {
-    Icon: FaTree,
-    title: "Outdoor Venues",
+    Icon: SiGoogleclassroom,
+    title: "class rooms",
     percentage: 36,
     width: "w-[136px]",
   },
