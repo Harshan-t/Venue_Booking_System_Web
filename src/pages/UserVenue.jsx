@@ -8,7 +8,7 @@ import { IoMdCalendar } from "react-icons/io";
 import { FaVideo, FaMicrophone, FaSnowflake, FaSearch } from "react-icons/fa";
 import { MdFilterList } from "react-icons/md";
 
-import Venuepng from "../assets/Venuepng.png";
+import Venuepng from "../assets/Venuepng.svg";
 
 function VenueContainer({ venue, capacity, location, type, photo, projector, ac, micAndSpeaker }) {
     return (

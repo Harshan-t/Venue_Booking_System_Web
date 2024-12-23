@@ -8,7 +8,7 @@ import VenueModal from "../components/venueview";
 function Venue() {
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +20,9 @@ function Venue() {
     capacity: "",
     location: "",
     type: "",
+    ac: "",
+    projector: "",
+    micAndSpeaker: "",
   });
 
   const openModal = (product) => {
@@ -51,7 +54,7 @@ function Venue() {
   };
 
   const handleDelete = (id) => {
-    console.log("Deleting venue with ID:", id); 
+    console.log("Deleting venue with ID:", id);
 
     axios.delete(`http://localhost:8000/venues/${id}`)
       .then((response) => {
@@ -71,6 +74,9 @@ function Venue() {
       capacity: product.capacity,
       location: product.location,
       type: product.type,
+      ac: product.ac,
+      projector: product.projector,
+      micAndSpeaker: product.micAndSpeaker
     });
     setIsEditModalOpen(true);
   };
@@ -88,7 +94,7 @@ function Venue() {
     if (!editData.name || !editData.capacity || !editData.location || !editData.type) {
       return setError("All fields are required.");
     }
-    
+
     try {
       const response = await axios.put(
         `http://localhost:8000/venues/${editData.id}`,
@@ -97,6 +103,9 @@ function Venue() {
           capacity: editData.capacity,
           location: editData.location,
           type: editData.type,
+          ac: editData.ac ? "Yes" : "No",
+          projector: editData.projector ? "Yes" : "No",
+          micAndSpeaker: editData.micAndSpeaker ? "Yes" : "No"
         }
       );
       setIsEditModalOpen(false);
@@ -262,17 +271,48 @@ function Venue() {
                   className="mt-1 p-2 w-full border rounded-md"
                 />
               </div>
-              <div className="mb-4">
-                <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type</label>
-                <input
-                  type="text"
-                  id="type"
-                  name="type"
-                  value={editData.type}
-                  onChange={handleEditChange}
-                  className="mt-1 p-2 w-full border rounded-md"
-                />
+              <div className="ml-2 flex justify-between w-[250px]" >
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="ac"
+                    name="ac"
+                    checked={editData.ac === 1}
+                    onChange={(e) =>
+                      handleEditChange({ target: { name: "ac", value: e.target.checked ? 1 : 0 } })
+                    }
+                    className="rounded-md size-[15px] mr-2 cursor-pointer"  
+                  />
+                  <label htmlFor="ac" className="text-sm font-medium text-gray-700">AC</label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="projector"
+                    name="projector"
+                    checked={editData.projector === 1}
+                    onChange={(e) =>
+                      handleEditChange({ target: { name: "projector", value: e.target.checked ? 1 : 0 } })
+                    }
+                    className="rounded-md size-[15px] mr-2 cursor-pointer"
+                  />
+                  <label htmlFor="projector" className="text-sm font-medium text-gray-700">Projector</label>
+                </div>
               </div>
+              <div className="flex items-center mt-4 ml-2">
+                <input
+                  type="checkbox"
+                  id="micAndSpeaker"
+                  name="micAndSpeaker"
+                  checked={editData.micAndSpeaker === 1}
+                  onChange={(e) =>
+                    handleEditChange({ target: { name: "micAndSpeaker", value: e.target.checked ? 1 : 0 } })
+                  }
+                  className="rounded-md size-[15px] mr-2 cursor-pointer"
+                />
+                <label htmlFor="micAndSpeaker" className="text-sm font-medium text-gray-700">Mic & Speaker</label>
+              </div>
+
               <div className="flex justify-end">
                 <button
                   type="submit"

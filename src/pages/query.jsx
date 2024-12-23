@@ -102,31 +102,31 @@ function Queries() {
               </tr>
             </thead>
             <tbody>
-              {filteredFeedbacks.map((item) => (
-                <tr
-                  key={item.id}
-                  className="bg-white border-b hover:bg-gray-50 cursor-pointer"
-                  onClick={() => handleRowClick(item)}
-                >
-                  <td className="px-6 py-4">{item.name}</td>
-                  <td className="px-6 py-4">{item.venuename}</td>
-                  <td className="px-6 py-4">{item.subject}</td>
-                  <td className="px-6 py-4">{item.comments}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-3 py-1 ${
-                        item.Status === "Unresolved"
-                          ? "inline-flex items-center justify-center bg-[#fcd7d4] text-sm font-medium text-[#ef3826] px-2 py-1 w-[100px] rounded-lg"
-                          : item.Status === "Resolved"
-                          ? "inline-flex items-center justify-center bg-[#ccf0eb] text-sm text-[#00b69b] font-medium px-2 py-1 w-[90px] rounded-lg"
-                          : "bg-gray-500"
-                      }`}
-                    >
-                      {item.Status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {filteredFeedbacks.length ?
+                filteredFeedbacks.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="bg-white border-b hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleRowClick(item)}
+                  >
+                    <td className="px-6 py-4">{item.name}</td>
+                    <td className="px-6 py-4">{item.venuename}</td>
+                    <td className="px-6 py-4">{item.subject}</td>
+                    <td className="px-6 py-4">{item.comments}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-3 py-1 ${item.Status === "Unresolved"
+                            ? "inline-flex items-center justify-center bg-[#fcd7d4] text-sm font-medium text-[#ef3826] px-2 py-1 w-[100px] rounded-lg"
+                            : item.Status === "Resolved"
+                              ? "inline-flex items-center justify-center bg-[#ccf0eb] text-sm text-[#00b69b] font-medium px-2 py-1 w-[90px] rounded-lg"
+                              : "bg-gray-500"
+                          }`}
+                      >
+                        {item.Status}
+                      </span>
+                    </td>
+                  </tr>
+                )):(<tr><td colSpan="6" className="px-6 py-4 text-center text-gray-500">No Queries, All Good.</td></tr>)}
             </tbody>
           </table>
         </div>
