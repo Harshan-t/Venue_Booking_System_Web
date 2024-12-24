@@ -24,7 +24,7 @@ function Navbar() {
                 <div className="space-x-7 flex items-center">
                     <button onClick={() => navigate('/home')}>Home</button>
                     <button onClick={() => navigate('/uservenue')}>Venue</button>
-                    <div className="relative">
+                    <div>
                         <button
                             onClick={toggleDropdown}
                             className="flex items-center space-x-2"
@@ -70,7 +70,7 @@ function Navbar() {
                                             }}
                                             className="block px-4 py-2 w-full text-left hover:bg-gray-100"
                                         >
-                                            My bookings
+                                            My Bookings
                                         </button>
                                     </li>
                                     <li>
@@ -81,10 +81,10 @@ function Navbar() {
                                             }}
                                             className="block px-4 py-2 w-full text-left hover:bg-gray-100"
                                         >
-                                            help
+                                            Help
                                         </button>
                                     </li>
-                                    
+
                                     <li>
                                         <button
                                             onClick={() => {

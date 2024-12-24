@@ -30,18 +30,19 @@ function UserDashboard() {
 
     return (
         <div>
-            <div>
+            <div className="bg-[#f4f4f4] min-h-screen">
                 <Navbar />
                 <div className='relative'>
-                    <img src={Titlebar} alt="" className='min-w-[1500px] w-[2000px] min-h-[200px] relative' />
-                    <div className='z-50 flex justify-center absolute top-16 text-white font-bold text-4xl left-24'>User Profile</div>
-                    <div className='absolute top-28 left-24 text-white'>Home</div>
+                    <div class="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
+                    <img src={Titlebar} alt="" className='w-full h-[250px] object-cover' />
+                    <div className='z-50 flex justify-center absolute top-[90px] text-white font-bold text-4xl left-20'>User Profile</div>
+                    <div className='absolute z-50 top-[130px] left-20 text-white'>Home &gt; Profile &gt; Dashboard</div>
                 </div>
 
                 <UserNavbar />
 
                 <div className="flex justify-center mt-7">
-                    <div className="bg-white min-w-[700px] w-[1100px] h-[230px] border-white shadow-lg rounded-xl p-6 flex items-center">
+                    <div className="bg-white min-w-[700px] w-[1100px] h-[230px] border shadow-lg rounded-xl p-6 flex items-center">
                         <div className="flex items-center justify-center min-w-[100px] w-[130px] h-[140px] ml-8 border-white rounded-xl">
                             <FaUserTie size="120px" />
                         </div>
@@ -56,7 +57,7 @@ function UserDashboard() {
                 <div className="flex justify-center"><hr className="mt-7 mb-7 border-[2px] border-[#d1d1d1] w-[1300px]" ></hr></div>
 
                 <div className="flex justify-center mb-4">
-                    <div className="bg-white min-w-[700px] w-[1100px] border-white shadow-lg rounded-xl py-6 px-6">
+                    <div className="bg-white min-w-[700px] w-[1100px] border shadow-lg rounded-xl py-6 px-6">
                         <div className="text-2xl font-[600] mb-6">Today's Events</div>
                         <hr className="border" />
 
@@ -101,7 +102,7 @@ function UserDashboard() {
 
                 <div className="flex justify-center"><hr className="mt-7 mb-7 border-[2px] border-[#d1d1d1] w-[1300px]" ></hr></div>
                 <div className="flex justify-center">
-                    <div className="relative shadow-lg bg-white mt-5 mb-5 p-10 rounded-lg w-[1200px]">
+                    <div className="relative shadow-lg bg-white border mt-5 mb-5 p-10 rounded-lg w-[1200px]">
                         <div className="text-2xl font-[600] mb-6">My Bookings</div>
                         <Table staffmail={userData.email} limit={5} />
                     </div>

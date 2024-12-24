@@ -29,6 +29,10 @@ const routes = [
         element: <Login />
     },
     {
+        path: '/login',
+        element: <Login />
+    },
+    {
         path: '/dashboardhome',
         element: <ProtectedRoute user={{ role: 'Admin' }} ><Dashboardhome /></ProtectedRoute>
     },

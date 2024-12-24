@@ -13,7 +13,7 @@ function BookVenue() {
     const location = useLocation();
     const data = location.state || {};
     const navigate = useNavigate();
-    
+
 
     const [Venue, setVenue] = useState(data.Venue || '')
     const [Venuelocation, setVenuelocation] = useState(data.Venuelocation || '')
@@ -49,12 +49,13 @@ function BookVenue() {
 
     return (
         <div>
-            <div className='bg-[#F5F6FA] h-full min-h-screen'>
+            <div className='bg-[#F5F6FA] min-h-screen'>
                 <Navbar />
                 <div className='relative'>
-                    <img src={Titlebar} alt="" className='min-w-[1500px] w-[2000px] min-h-[200px] relative' />
-                    <div className='z-50 flex justify-center absolute top-16 text-white font-bold text-4xl left-24'>Book Venue</div>
-                    <div className='absolute top-28 left-24 text-white'>Home</div>
+                    <div class="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
+                    <img src={Titlebar} alt="" className='w-full h-[250px] object-cover' />
+                    <div className='z-50 flex justify-center absolute top-[90px] text-white font-bold text-4xl left-20'>Book Venue</div>
+                    <div className='absolute z-50 top-[130px] left-20 text-white'>Home &gt; Booking</div>
                 </div>
 
                 <div className='flex justify-center items-center h-16 '>

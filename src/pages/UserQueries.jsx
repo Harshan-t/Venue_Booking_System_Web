@@ -12,9 +12,9 @@ function UserQueries() {
     const [subject, setSubject] = useState();
     const [comments, setComments] = useState();
     const [options, setOptions] = useState([]);
-    
+
     const navigate = useNavigate();  // Initialize the navigate function
-    
+
     const setOptionsDetails = async () => {
         const response = await axios.get('http://localhost:8000/venues');
         const names = response.data.venues.map(venue => venue.name);
@@ -27,7 +27,7 @@ function UserQueries() {
 
     const handleConfirm = async (event) => {
         event.preventDefault();  // Prevent form default submission behavior
-        
+
         try {
             const payload = {
                 Venue_Name: venue,
@@ -50,13 +50,14 @@ function UserQueries() {
     };
 
     return (
-        <div>
+        <div className="bg-[#f4f4f4] min-h-screen">
+            <Navbar />
             <form onSubmit={handleConfirm}>
-                <Navbar />
                 <div className='relative'>
-                    <img src={Titlebar} alt="" className='min-w-[1500px] w-[2000px] min-h-[200px] relative' />
-                    <div className='z-50 flex justify-center absolute top-16 text-white font-bold text-4xl left-24'>User Profile</div>
-                    <div className='absolute top-28 left-24 text-white'>Home</div>
+                    <div class="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
+                    <img src={Titlebar} alt="" className='w-full h-[250px] object-cover' />
+                    <div className='z-50 flex justify-center absolute top-[90px] text-white font-bold text-4xl left-20'>User Profile</div>
+                    <div className='absolute z-50 top-[130px] left-20 text-white'>Home &gt; Profile &gt; Queries</div>
                 </div>
                 <UserNavbar />
                 <div className="flex justify-center">

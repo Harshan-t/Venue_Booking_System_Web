@@ -113,15 +113,16 @@ export default function UserVenue() {
         <div className="bg-[#f4f4f4] min-h-screen">
             <Navbar />
             <div className="relative">
+                <div class="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
                 <img
                     src={Titlebar}
                     alt="Title Bar"
-                    className="w-full h-[200px] object-cover"
+                    className="w-full h-[250px] object-cover"
                 />
-                <div className="absolute top-16 left-20 text-white font-bold text-4xl">
+                <div className="absolute z-20 top-[90px] left-20 text-white font-bold text-4xl">
                     Venue List
                 </div>
-                <div className="absolute top-28 left-20 text-white text-lg">
+                <div className="absolute z-20 top-[130px] left-20 text-white text-lg">
                     Home &gt; Venues
                 </div>
             </div>
