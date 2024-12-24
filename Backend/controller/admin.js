@@ -43,7 +43,7 @@ class AdminController {
             const result = await db.query(query);
             const venuesWithPhotoUrl = result[0].map((venue) => ({
                 ...venue,
-                photo: venue.photo ? `http://localhost:8000${venue.photo}` : null 
+                photo: venue.photo ? `http://localhost:8000${venue.photo}` : null
             }));
             res.json({ venues: venuesWithPhotoUrl });
         } catch (error) {
@@ -120,67 +120,95 @@ class AdminController {
     updateBookings = async (req, res) => {
         const { id } = req.params;
         const { status, reason } = req.body;
-
+    
         if (status !== 'Approved' && status !== 'Rejected') {
             return res.status(400).json({ message: 'Invalid status value' });
         }
-
+    
         try {
+           
             if (status === 'Rejected' && !reason) {
                 return res.status(400).json({ message: 'Rejection reason is required when status is Rejected' });
             }
-
-            const query = "UPDATE VenueBookings SET Status = ?, rejection_reason = ? WHERE id = ?";
-            const [result] = await db.query(query, [status, status === 'Rejected' ? reason : null, id]);
-
-            if (result.affectedRows === 0) {
+    
+           
+            const bookingQuery = "SELECT * FROM VenueBookings WHERE id = ?";
+            const [bookingResult] = await db.query(bookingQuery, [id]);
+    
+            if (bookingResult.length === 0) {
                 return res.status(404).json({ message: 'Booking not found' });
             }
-
-            if (status === 'Rejected') {
-                const bookingQuery = "SELECT * FROM VenueBookings WHERE id = ?";
-                const [bookingResult] = await db.query(bookingQuery, [id]);
-
-                if (bookingResult.length === 0) {
-                    return res.status(404).json({ message: 'Booking not found for sending email' });
-                }
-
-                const booking = bookingResult[0];
-
-                const mailOptions = {
-                    from: "vijaykrishnaa.cs23@bitsathy.ac.in",
-                    to: booking.email,
-                    subject: `Booking Rejected for ${booking.Venue_Name}`,
-                    text: `
-                            Dear ${booking.Staff},
-                        
-                            Your booking request for the venue "${booking.Venue_Name}" on ${new Date(booking.Booking_Date).toLocaleDateString()} has been rejected.
-                            
-                            Reason for rejection: ${reason}
-                        
+    
+            const booking = bookingResult[0];
+    
+            if (status === 'Approved') {
+               
+                const rejectDuplicatesQuery = `
+                    UPDATE VenueBookings 
+                    SET Status = 'Rejected', rejection_reason = 'Another booking was approved'
+                    WHERE Venue_Name = ? AND Booking_Date = ? AND id != ? AND Status != 'Rejected'
+                `;
+                await db.query(rejectDuplicatesQuery, [booking.Venue_Name, booking.Booking_Date, id]);
+    
+               
+                const rejectedBookingsQuery = `
+                    SELECT email, Staff, Venue_Name, Booking_Date 
+                    FROM VenueBookings 
+                    WHERE Venue_Name = ? AND Booking_Date = ? AND id != ? AND Status = 'Rejected'
+                `;
+                const [rejectedBookings] = await db.query(rejectedBookingsQuery, [booking.Venue_Name, booking.Booking_Date, id]);
+    
+                
+                for (const rejected of rejectedBookings) {
+                    const mailOptions = {
+                        from: "vijaykrishnaa.cs23@bitsathy.ac.in",
+                        to: rejected.email,
+                        subject: `Booking Rejected for ${rejected.Venue_Name}`,
+                        text: `
+                            Dear ${rejected.Staff},
+    
+                            Your booking request for the venue "${rejected.Venue_Name}" on ${new Date(rejected.Booking_Date).toLocaleDateString()} has been rejected because another booking was approved.
+    
+                            Please try booking another venue for the requested date.
+    
                             If you have any further questions, feel free to contact us.
-                        
+    
                             Regards,
                             Venue Booking Team
                         `,
-                };
-
-                try {
-                    await transporter.sendMail(mailOptions);
-                    console.log("Rejection email sent successfully");
-                } catch (emailError) {
-                    console.error("Error sending email:", emailError);
-                    return res.status(500).json({ message: 'Error sending rejection email' });
+                    };
+    
+                    try {
+                        await transporter.sendMail(mailOptions);
+                        console.log(`Rejection email sent to ${rejected.email} successfully`);
+                    } catch (emailError) {
+                        console.error(`Error sending email to ${rejected.email}:`, emailError);
+                    }
                 }
             }
-
+    
+            
+            const updateQuery = `
+                UPDATE VenueBookings 
+                SET Status = ?, rejection_reason = ? 
+                WHERE id = ?
+            `;
+            const [result] = await db.query(updateQuery, [status, status === 'Rejected' ? reason : null, id]);
+    
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Booking not found' });
+            }
+    
             res.json({ message: 'Booking status updated successfully' });
         } catch (error) {
             console.error("Error updating status:", error);
             res.status(500).json({ message: "An error occurred while updating the status" });
         }
-    }
-
+    };
+    
+    
+    
+    
     getQueries = async (req, res) => {
         const query = "SELECT * FROM HELP";
         try {
