@@ -1,15 +1,28 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Sidebar from "../components/sidebar";
-import { FaSearch } from "react-icons/fa";
 import BookingApproval from "../components/approval";
 import axios from "axios";
 
-function Bookingconformation() {
+import filter from "../assets/filter.svg";
+
+function BookingConfirmation() {
   const [products, setProducts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [venues, setVenues] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedVenue, setSelectedVenue] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  const setVenueDetails = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/venues");
+      setVenues(response.data.venues);
+    } catch (error) {
+      console.error("Error fetching venues:", error);
+    }
+  };
 
   const VenueBookings = async () => {
     try {
@@ -28,6 +41,7 @@ function Bookingconformation() {
 
   useEffect(() => {
     VenueBookings();
+    setVenueDetails();
   }, []);
 
   const handleRowClick = (booking) => {
@@ -42,8 +56,15 @@ function Bookingconformation() {
     setSelectedBooking(null);
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+  const handleVenueChange = (e) => setSelectedVenue(e.target.value);
+  const handleDateChange = (e) => setSelectedDate(e.target.value);
+  const handleLocationChange = (e) => setSelectedLocation(e.target.value);
+
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSelectedVenue("");
+    setSelectedDate("");
+    setSelectedLocation("");
   };
 
   const updateBookingStatus = (id, status) => {
@@ -54,32 +75,95 @@ function Bookingconformation() {
     );
   };
 
-  const filteredProducts = products.filter((product) => {
-    const { Venue_Name, Location, Booking_Date, Staff, Status } = product || {};
-    const matchesSearch =
-      (Venue_Name?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
-      (Location?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
-      (Booking_Date && new Date(Booking_Date).toLocaleDateString()?.includes(searchQuery)) ||
-      (Staff?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
-    return matchesSearch && Status?.trim() === "Awaiting..";
-  });
+  // Get unique locations
+  const uniqueLocations = useMemo(() => {
+    const locationSet = new Set(venues.map((venue) => venue.location)); 
+    return [...locationSet];
+  }, [venues]);
+
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const { Venue_Name, Location, Booking_Date, Staff, Status } = product || {};
+
+      const matchesSearch =
+        (Venue_Name?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
+        (Location?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
+        (Booking_Date && new Date(Booking_Date).toLocaleDateString()?.includes(searchQuery)) ||
+        (Staff?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
+
+      const matchesVenue = selectedVenue === "" || Venue_Name === selectedVenue;
+
+      const matchesLocation = selectedLocation === "" || Location === selectedLocation;
+
+      const matchesDate =
+        selectedDate === "" ||
+        (Booking_Date && new Date(Booking_Date).toLocaleDateString() === new Date(selectedDate).toLocaleDateString());
+
+      const isAwaiting = Status?.trim() === "Awaiting..";
+
+      return matchesSearch && matchesVenue && matchesDate && matchesLocation && isAwaiting;
+    });
+  }, [products, searchQuery, selectedLocation, selectedVenue, selectedDate]);
+
 
   return (
     <div className="dashboard flex bg-gray-100 min-h-screen">
       <Sidebar />
       <div className="flex flex-col p-4 w-full lg:w-4/5">
-        <h2 className="text-3xl font-bold text-gray-700 mb-8">Booking Confirmation</h2>
+        <h2 className="text-3xl font-bold text-gray-700 mb-4">Booking Confirmation</h2>
 
-        <div className="flex justify-start p-4">
-          <div className="flex items-center w-full max-w-md bg-white rounded-full shadow-sm px-7 py-1">
-            <FaSearch className="text-gray-400 mr-3 text-xl" />
+        <hr className="mb-4 border" />
+        <div className="flex items-center border rounded-xl bg-white mb-3 h-content">
+          <img src={filter} alt="" className="ml-3" />
+          <hr className="rotate-90 border w-12 ml-[-12px] mr-[-20px]" />
+          <div className="flex flex-col p-1 h-full items-center justify-center">
+            <select
+              onChange={handleVenueChange}
+              value={selectedVenue}
+              className="w-[190px] px-3 py-2 cursor-pointer rounded-lg focus:outline-none bg-white text-gray-700"
+            >
+              <option value="">Venue Name</option>
+              {venues.map((venue) => (
+                <option key={venue.id} value={venue.name}>
+                  {venue.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <hr className="rotate-90 border w-12 ml-[-12px] mr-[-12px]" />
+          <div className="flex flex-col p-1 h-full items-center justify-center">
+            <select
+              onChange={handleLocationChange}
+              value={selectedLocation}
+              className="w-[190px] px-3 py-2 cursor-pointer rounded-lg focus:outline-none bg-white text-gray-700"
+            >
+              <option value="">Location</option>
+              {uniqueLocations.map((location, index) => (
+                <option key={index} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
+
+          </div>
+          <hr className="rotate-90 border w-12 ml-[-12px] mr-[-12px]" />
+          <div className="flex flex-col h-full items-center justify-center">
             <input
-              type="text"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none text-lg"
+              type="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              className="w-[190px] cursor-pointer h-full focus:outline-none text-gray-700"
             />
+          </div>
+          <hr className="rotate-90 border w-12 ml-[-12px] mr-[-12px]" />
+          <div className="flex items-end">
+            <button
+              onClick={resetFilters}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300"
+            >
+              Reset Filters
+            </button>
           </div>
         </div>
 
@@ -87,14 +171,14 @@ function Bookingconformation() {
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
-                <th scope="col" className="px-6 py-3">Venue Name</th>
-                <th scope="col" className="px-6 py-3">Location</th>
-                <th scope="col" className="px-6 py-3">Date</th>
-                <th scope="col" className="px-6 py-3">From Time</th>
-                <th scope="col" className="px-6 py-3">To Time</th>
-                <th scope="col" className="px-6 py-3">Booked Capacity</th>
-                <th scope="col" className="px-6 py-3">Staff</th>
-                <th scope="col" className="px-6 py-3">Status</th>
+                <th className="px-6 py-3">Venue Name</th>
+                <th className="px-6 py-3">Location</th>
+                <th className="px-6 py-3">Date</th>
+                <th className="px-6 py-3">From Time</th>
+                <th className="px-6 py-3">To Time</th>
+                <th className="px-16 py-3">Booked Capacity</th>
+                <th className="px-6 py-3">Staff</th>
+                <th className="px-6 py-3">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -105,21 +189,27 @@ function Bookingconformation() {
                     className="bg-white border-b hover:bg-gray-50 cursor-pointer"
                     onClick={() => handleRowClick(product)}
                   >
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                       {product.Venue_Name}
                     </th>
                     <td className="px-6 py-4">{product.Location}</td>
-                    <td className="px-6 py-4">{product.Booking_Date ? new Date(product.Booking_Date).toLocaleDateString() : "N/A"}</td>
+                    <td className="px-6 py-4">
+                      {product.Booking_Date
+                        ? new Date(product.Booking_Date).toLocaleDateString()
+                        : "N/A"}
+                    </td>
                     <td className="px-6 py-4">{product.From_Time}</td>
                     <td className="px-6 py-4">{product.To_Time}</td>
-                    <td className="px-16 py-4">{product.Booked_Capacity}</td>
+                    <td className="px-24 py-4">{product.Booked_Capacity}</td>
                     <td className="px-6 py-4">{product.Staff}</td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center text-xs font-medium px-2 py-1 rounded 
-                          ${product.Status === "Approved" ? "inline-flex items-center justify-center bg-[#ccf0eb] text-sm text-[#00b69b] font-medium px-2 py-1 w-[90px] rounded-lg" :
-                            product.Status === "Rejected" ? "inline-flex items-center justify-center bg-[#fcd7d4] text-sm font-medium text-[#ef3826] px-2 py-1 w-[90px] rounded-lg" :
-                              "inline-flex items-center justify-center bg-[#ffeddd] text-sm font-medium text-[#ffa756] px-2 py-1 w-[90px] rounded-lg"}`}
+                        className={`inline-flex items-center justify-center text-sm font-medium px-2 py-1 rounded-lg ${product.Status === "Approved"
+                          ? "bg-[#ccf0eb] text-[#00b69b]"
+                          : product.Status === "Rejected"
+                            ? "bg-[#fcd7d4] text-[#ef3826]"
+                            : "bg-[#ffeddd] text-[#ffa756]"
+                          }`}
                       >
                         {product.Status}
                       </span>
@@ -151,4 +241,4 @@ function Bookingconformation() {
   );
 }
 
-export default Bookingconformation;
+export default BookingConfirmation;

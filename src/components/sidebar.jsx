@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaUserFriends, FaMapMarkedAlt, FaBook, FaComments, FaHistory, FaMoon, FaPowerOff, FaCheckCircle } from "react-icons/fa";
@@ -17,7 +15,7 @@ const Sidebar = () => {
         { name: 'Staff', icon: <FaUserFriends />, route: "/staffpage" },
         { name: 'Venues', icon: <FaMapMarkedAlt />, route: "/venue" },
         { name: 'Booking Confirmation', icon: <FaBook />, route: "/booking" },
-        { name: 'Queries', icon: <FaComments />, route: "/query" }, 
+        { name: 'Queries', icon: <FaComments />, route: "/query" },
         { name: 'History', icon: <FaHistory />, route: "/history" },
     ];
 
@@ -27,12 +25,11 @@ const Sidebar = () => {
                 <nav>
                     <ul className="space-y-2">
                         {menuitems.map((item) => (
-                            <li key={item.name} className="cursor-pointer">
+                            <li key={item.name}>
                                 <Link
                                     to={item.route}
                                     className={`flex items-center space-x-3 p-4 rounded-lg transition duration-200
-                                        ${active === item.route ? 'bg-blue-100 text-blue-600' : 'text-gray-700'}
-                                        hover:bg-blue-600 hover:text-white`}
+                                        ${active === item.route ? 'bg-blue-100 text-blue-600 cursor-default' : 'text-gray-700 hover:bg-blue-600 hover:text-white'} `}
                                 >
                                     {item.icon}
                                     <span className="font-medium">{item.name}</span>

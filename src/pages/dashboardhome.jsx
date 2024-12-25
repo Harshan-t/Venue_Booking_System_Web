@@ -1,11 +1,11 @@
-
 import "../styles/dashboardhome.css";
 import React from "react";
 import Sidebar from "../components/sidebar";
-import { FaUser, FaMapMarkerAlt, FaClipboardCheck, FaTimesCircle } from "react-icons/fa";
+import { FaUser, FaMapMarkerAlt, FaClipboardCheck, FaTimesCircle, FaArrowRight } from "react-icons/fa";
 import Usage from '../components/usage';
 import CountUp from 'react-countup';
 import { Link } from "react-router-dom";
+
 function Dashboardhome() {
     const cardData = [
         { title: "Total Staffs", value: 2582, icon: <FaUser className="text-purple-500" /> },
@@ -20,7 +20,7 @@ function Dashboardhome() {
             <div className="flex flex-col p-4 w-full lg:w-4/5">
                 <h2 className="text-3xl font-bold text-gray-700 mb-8">Dashboard</h2>
 
-                <div className="grid grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-4 gap-6 mb-8 cursor-default">
                     {cardData.map((card, index) => (
                         <div
                             key={index}
@@ -40,14 +40,15 @@ function Dashboardhome() {
                 </div>
 
                 <div>
-                    <Link to={'/analyticsvenue'}>
+                    <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold mb-4">Usage details</h3>
-                        <Usage />
-                    </Link>
-                </div>
-
-                <div className="py-8">
-                    {/* table */}
+                        <Link to={'/analyticsvenue'}>
+                            <button className="flex items-center bg-[#dbeafe] text-[#2563eb] border border-[#2563eb] p-1 px-4 rounded-2xl">
+                                Detailed Usage <FaArrowRight className="ml-2" />
+                            </button>
+                        </Link>
+                    </div>
+                    <Usage />
                 </div>
             </div>
         </div>

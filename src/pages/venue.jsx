@@ -4,8 +4,20 @@ import { FaSearch, FaPen, FaTrash, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import VenueModal from "../components/venueview";
+import { MdFilterList } from "react-icons/md";
 
 function Venue() {
+  const [showFilterPopup, setShowFilterPopup] = useState(false);
+  const [filters, setFilters] = useState({
+    max_capacity: "",
+    min_capacity: "",
+    location: "",
+    type: "",
+    ac: false,
+    projector: false,
+    micAndSpeaker: false
+  });
+
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -119,12 +131,16 @@ function Venue() {
     setVenueDetails();
   }, [isEditModalOpen]);
 
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products.filter((venue) => {
     return (
-      product?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product?.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product?.capacity?.toString().includes(searchQuery)
+      venue?.name?.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (filters.min_capacity ? venue.capacity >= filters.min_capacity : true) &&
+      (filters.max_capacity ? venue.capacity <= filters.max_capacity : true) &&
+      (filters.location ? venue.location.toLowerCase().includes(filters.location.toLowerCase()) : true) &&
+      (filters.type ? venue.type.toLowerCase().includes(filters.type.toLowerCase()) : true) &&
+      (filters.ac ? venue.ac : true) &&
+      (filters.projector ? venue.projector : true) &&
+      (filters.micAndSpeaker ? venue.micAndSpeaker : true)
     );
   });
 
@@ -132,18 +148,29 @@ function Venue() {
     <div className="dashboard flex bg-gray-100 min-h-screen">
       <Sidebar />
       <div className="flex flex-col p-4 w-full lg:w-4/5">
-        <h2 className="text-3xl font-bold text-gray-700 mb-8">Venue</h2>
+        <h2 className="text-3xl font-bold text-gray-700 mb-8">Venues</h2>
+
         <div className="flex justify-between items-center">
           <div className="flex justify-start p-4">
-            <div className="flex items-center w-full max-w-md bg-white rounded-full shadow-sm px-10 py-1">
-              <FaSearch className="text-gray-400 mr-3 text-xl" />
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none text-lg"
-              />
+            <div>
+
+              <div className="bg-white flex items-center w-full max-w-md shadow-sm border-2 rounded-2xl shadow-sm px-6 py-1">
+                <FaSearch className="text-gray-400 mr-3 text-xl" />
+                <input
+                  type="text"
+                  placeholder="Search Venues..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none text-lg"
+                />
+              </div>
+            </div>
+            <div
+              className="flex items-center ml-4 shadow-sm border-2 rounded-2xl px-4 cursor-pointer py-1"
+              onClick={() => setShowFilterPopup(true)}
+            >
+              <MdFilterList size="23px" className="mr-3 flex items-center" />
+              Filter
             </div>
           </div>
           <Link to={"/addvenue1"}>
@@ -233,6 +260,115 @@ function Venue() {
         onClose={closeModal}
       />
 
+      {showFilterPopup && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Filter Venues</h2>
+            <div className="grid grid-cols-2 ">
+              <div>
+                <label htmlFor="">Minimum Capacity</label>
+                <input
+                  type="number"
+                  placeholder="Minimum Capacity"
+                  value={filters.min_capacity}
+                  onChange={(e) => setFilters({ ...filters, min_capacity: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                />
+              </div>
+              <div>
+                <label htmlFor="">Maximum Capacity</label>
+                <input
+                  type="number"
+                  placeholder="Maximum Capacity"
+                  value={filters.max_capacity}
+                  onChange={(e) => setFilters({ ...filters, max_capacity: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                />
+              </div>
+              <div>
+                <label htmlFor="">Location</label>
+                <select
+                  value={filters.location}
+                  onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none bg-white text-gray-700"
+                >
+                  <option value="">All</option>
+                  <option value="Sunflower Block">Sunflower Block</option>
+                  <option value="Daisy Block">Daisy Block</option>
+                  <option value="Rosewood Block">Rosewood Block</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="">Type</label>
+                <select
+                  value={filters.type}
+                  onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none bg-white text-gray-700"
+                >
+                  <option value="">All</option>
+                  <option value="Seminar Hall">Seminar Hall</option>
+                  <option value="Conference Room">Conference Room</option>
+                  <option value="Auditorium">Auditorium</option>
+                </select>
+              </div>
+              <div className="flex items-center ml-2">
+                <input
+                  type="checkbox"
+                  checked={filters.ac}
+                  onChange={(e) => setFilters({ ...filters, ac: e.target.checked })}
+                  className="mr-2 size-4"
+                />
+                <label>Air Conditioning</label>
+              </div>
+              <div className="flex items-center ml-2">
+                <input
+                  type="checkbox"
+                  checked={filters.projector}
+                  onChange={(e) => setFilters({ ...filters, projector: e.target.checked })}
+                  className="mr-2 size-4"
+                />
+                <label>Projector</label>
+              </div>
+              <div className="flex items-center ml-2">
+                <input
+                  type="checkbox"
+                  checked={filters.micAndSpeaker}
+                  onChange={(e) => setFilters({ ...filters, micAndSpeaker: e.target.checked })}
+                  className="mr-2 size-4"
+                />
+                <label>Mic & Speaker</label>
+              </div>
+            </div>
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                className="px-4 py-2 bg-green-200 rounded-lg text-green-600"
+                onClick={() => setShowFilterPopup(false)}
+              >
+                OK
+              </button>
+              <button
+                className="px-4 py-2 bg-red-200 rounded-lg text-red-600"
+                onClick={() => {
+                  setFilters({
+                    max_capacity: "",
+                    min_capacity: "",
+                    location: "",
+                    type: "",
+                    ac: false,
+                    projector: false,
+                    micAndSpeaker: false,
+                  });
+                  setSearchQuery("");
+                }}
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+      }
+
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg w-96">
@@ -281,7 +417,7 @@ function Venue() {
                     onChange={(e) =>
                       handleEditChange({ target: { name: "ac", value: e.target.checked ? 1 : 0 } })
                     }
-                    className="rounded-md size-[15px] mr-2 cursor-pointer"  
+                    className="rounded-md size-[15px] mr-2 cursor-pointer"
                   />
                   <label htmlFor="ac" className="text-sm font-medium text-gray-700">AC</label>
                 </div>
