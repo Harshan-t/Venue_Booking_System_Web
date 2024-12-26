@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { TypeAnimation } from 'react-type-animation';
 import Navbar from '../components/Navbar.jsx'
 import { UserContext } from '../../UserContext.jsx';
-
+import { TypeAnimation } from 'react-type-animation';
 import myImage from '../assets/Image.png'
 import Book from '../assets/Book.png'
 import Venuepng from '../assets/Venuepng.svg'
@@ -19,7 +19,7 @@ function Landingpage() {
                 <Navbar username={userData.name} usermail={userData.email} />
                 <div className='flex justify-center items-center mt-20'>
                     <div className='max-w-xl min-w-xl tracking-wide font-sans flex flex-col'>
-                        <div className='font-bold text-4xl mt-4'>
+                    <div className='font-bold text-4xl mt-4'>
                         <TypeAnimation
                                 sequence={[
                                     'Hi, ', 

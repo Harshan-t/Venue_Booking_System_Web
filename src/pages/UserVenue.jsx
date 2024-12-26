@@ -16,7 +16,7 @@ function VenueContainer({ venue, capacity, location, type, photo, projector, ac,
             <div className="flex flex-col bg-white shadow-lg rounded-xl w-[80vw] max-w-[900px] overflow-hidden p-6 border border-gray-200">
                 <div className="flex items-center">
                     <img
-                        src={photo || Venuepng}
+                        src={photo ? photo : Venuepng}
                         alt={venue}
                         className="w-[180px] h-[180px] object-cover rounded-lg shadow-md border"
                     />
@@ -96,6 +96,7 @@ export default function UserVenue() {
         setVenueDetails();
     }, []);
 
+
     const filteredVenues = Venues.filter((venue) => {
         return (
             venue?.name?.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -158,42 +159,52 @@ export default function UserVenue() {
                     <div className="bg-white p-6 rounded-lg shadow-lg">
                         <h2 className="text-xl font-bold mb-4">Filter Venues</h2>
                         <div className="grid grid-cols-2 ">
-                            <input
-                                type="number"
-                                placeholder="Minimum Capacity"
-                                value={filters.min_capacity}
-                                onChange={(e) => setFilters({ ...filters, min_capacity: e.target.value })}
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none"
-                            />
-                            <input
-                                type="number"
-                                placeholder="Maximum Capacity"
-                                value={filters.max_capacity}
-                                onChange={(e) => setFilters({ ...filters, max_capacity: e.target.value })}
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none"
-                            />
-                            <select
-                                value={filters.location}
-                                onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none bg-white text-gray-700"
-                            >
-                                <option value="">All</option>
-                                <option value="Sunflower Block">Sunflower Block</option>
-                                <option value="Daisy Block">Daisy Block</option>
-                                <option value="Rosewood Block">Rosewood Block</option>
-                            </select>
-
-                            {/* Type Dropdown */}
-                            <select
-                                value={filters.type}
-                                onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none bg-white text-gray-700"
-                            >
-                                <option value="">All</option>
-                                <option value="Seminar Hall">Seminar Hall</option>
-                                <option value="Conference Room">Conference Room</option>
-                                <option value="Auditorium">Auditorium</option>
-                            </select>
+                            <div>
+                                <label htmlFor="">Minimum Capacity</label>
+                                <input
+                                    type="number"
+                                    placeholder="Minimum Capacity"
+                                    value={filters.min_capacity}
+                                    onChange={(e) => setFilters({ ...filters, min_capacity: e.target.value })}
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="">Maximum Capacity</label>
+                                <input
+                                    type="number"
+                                    placeholder="Maximum Capacity"
+                                    value={filters.max_capacity}
+                                    onChange={(e) => setFilters({ ...filters, max_capacity: e.target.value })}
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="">Location</label>
+                                <select
+                                    value={filters.location}
+                                    onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none bg-white text-gray-700"
+                                >
+                                    <option value="">All</option>
+                                    <option value="Sunflower Block">Sunflower Block</option>
+                                    <option value="Daisy Block">Daisy Block</option>
+                                    <option value="Rosewood Block">Rosewood Block</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label htmlFor="">Type</label>
+                                <select
+                                    value={filters.type}
+                                    onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+                                    className="w-full px-4 py-2 border rounded-lg focus:outline-none bg-white text-gray-700"
+                                >
+                                    <option value="">All</option>
+                                    <option value="Seminar Hall">Seminar Hall</option>
+                                    <option value="Conference Room">Conference Room</option>
+                                    <option value="Auditorium">Auditorium</option>
+                                </select>
+                            </div>
                             <div className="flex items-center ml-2">
                                 <input
                                     type="checkbox"

@@ -7,7 +7,7 @@ import RejectionReason from "./rejection";
 const BookingApproval = ({ booking, closeModal, updateBookingStatus }) => {
   const [status, setStatus] = useState(booking?.status || null);
   const [rejectionReason, setRejectionReason] = useState("");
-
+  
   if (!booking) return null;
 
   const handleStatusChange = (newStatus) => {

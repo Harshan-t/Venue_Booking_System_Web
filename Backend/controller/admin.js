@@ -139,18 +139,17 @@ class AdminController {
                 return res.status(404).json({ message: 'Booking not found' });
             }
     
-            const booking = bookingResult[0];
+            const booking = bookingResult[0];        
     
             if (status === 'Approved') {
                
                 const rejectDuplicatesQuery = `
                     UPDATE VenueBookings 
                     SET Status = 'Rejected', rejection_reason = 'Another booking was approved'
-                    WHERE Venue_Name = ? AND Booking_Date = ? AND id != ? AND Status != 'Rejected'
+                    WHERE Venue_Name = ? AND Booking_Date = ? AND id != ? AND Status != 'Rejected' AND ((From_Time >= ? AND From_Time <= ?) OR (To_Time >= ? AND To_Time <= ?))
                 `;
-                await db.query(rejectDuplicatesQuery, [booking.Venue_Name, booking.Booking_Date, id]);
+                await db.query(rejectDuplicatesQuery, [booking.Venue_Name, booking.Booking_Date, id, booking.From_Time, booking.To_Time, booking.From_Time,  booking.To_Time]);
     
-               
                 const rejectedBookingsQuery = `
                     SELECT email, Staff, Venue_Name, Booking_Date 
                     FROM VenueBookings 
