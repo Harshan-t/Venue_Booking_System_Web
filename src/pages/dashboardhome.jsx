@@ -1,17 +1,57 @@
-import "../styles/dashboardhome.css";
-import React from "react";
-import Sidebar from "../components/sidebar";
-import { FaUser, FaMapMarkerAlt, FaClipboardCheck, FaTimesCircle, FaArrowRight } from "react-icons/fa";
-import Usage from '../components/usage';
-import CountUp from 'react-countup';
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import CountUp from 'react-countup';
+import axios from "axios";
+
+import Sidebar from "../components/sidebar";
+import Usage from '../components/usage';
+
+import { FaUser, FaMapMarkerAlt, FaClipboardCheck, FaTimesCircle, FaArrowRight } from "react-icons/fa";
+import "../styles/dashboardhome.css";
 
 function Dashboardhome() {
+    const [Staff, setStaff] = useState([]);
+    const [Venues, setVenues] = useState([]);
+    const [Booked, setBooked] = useState([]);
+    const [Unreserved, setUnreserved] = useState([]);
+
+    const setstaffdetails = () => {
+        axios.get("http://localhost:8000/staffpage")
+            .then(response => {
+                if (response.data && response.data.staffdetails) {
+                    setStaff(response.data.staffdetails);
+                } else {
+                    console.error("Invalid response format:", response.data);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching staff details:", error);
+            });
+    };
+
+    const setVenueDetails = async () => {
+        try {
+            const response = await axios.get("http://localhost:8000/venues");
+            if (response.data && Array.isArray(response.data.venues)) {
+                setVenues(response.data.venues);
+            } else {
+                throw new Error("Invalid venue data");
+            }
+        } catch (error) {
+            console.error("Error fetching venues:", error);
+        }
+    };
+
+    useEffect(() => {
+        setstaffdetails();
+        setVenueDetails();
+    }, []);
+
     const cardData = [
-        { title: "Total Staffs", value: 2582, icon: <FaUser className="text-purple-500" /> },
-        { title: "Total Venues", value: 920, icon: <FaMapMarkerAlt className="text-yellow-400" /> },
-        { title: "Booked Venues", value: 823, icon: <FaClipboardCheck className="text-green-500" /> },
-        { title: "Unreserved Venues", value: 97, icon: <FaTimesCircle className="text-red-500" /> },
+        { title: "Total Staffs", value: Staff.length, icon: <FaUser className="text-purple-500" /> },
+        { title: "Total Venues", value: Venues.length, icon: <FaMapMarkerAlt className="text-yellow-400" /> },
+        { title: "Booked Venues", value: 0, icon: <FaClipboardCheck className="text-green-500" /> },
+        { title: "Unreserved Venues", value: 0, icon: <FaTimesCircle className="text-red-500" /> },
     ];
 
     return (
@@ -42,7 +82,12 @@ function Dashboardhome() {
                 <div>
                     <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold mb-4">Usage details</h3>
-                        <Link to={'/analyticsvenue'}>
+                        <Link to='/analyticsvenue' state={[
+                            { title: "Total Staffs", value: 0, icon: "FaUser" },
+                            { title: "Total Venues", value: 0, icon: "FaMapMarkerAlt" },
+                            { title: "Booked Venues", value: 0, icon: "FaClipboardCheck" },
+                            { title: "Unreserved Venues", value: 0, icon: "FaTimesCircle" },
+                        ]}>
                             <button className="flex items-center bg-[#dbeafe] text-[#2563eb] border border-[#2563eb] p-1 px-4 rounded-2xl">
                                 Detailed Usage <FaArrowRight className="ml-2" />
                             </button>
@@ -51,7 +96,7 @@ function Dashboardhome() {
                     <Usage />
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

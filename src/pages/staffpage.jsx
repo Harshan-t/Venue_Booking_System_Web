@@ -35,7 +35,7 @@ function Staffpage() {
             (product.name && product.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
             (product.department && product.department.toLowerCase().includes(searchQuery.toLowerCase())) ||
             (product.email && product.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            (product.contact && product.contact.toString().includes(searchQuery)) // Ensure contact is treated
+            (product.contact && product.contact.toString().includes(searchQuery))
         );
     });
 
@@ -56,14 +56,14 @@ function Staffpage() {
                 <h2 className="text-3xl font-bold text-gray-700 mb-8">Staff details</h2>
 
                 <div className="flex justify-start p-4">
-                    <div className="flex items-center w-full max-w-md bg-white rounded-full shadow-sm px-3 py-1">
-                        <FaSearch className="text-gray-400 mr-3" />
+                    <div className="bg-white flex items-center w-[300px] max-w-md shadow-sm border-2 rounded-2xl shadow-sm px-4 py-1">
+                        <FaSearch className="text-gray-400 mr-3 text-xl" size={19} />
                         <input
                             type="text"
-                            placeholder="Search"
+                            placeholder="Search Staff, Dept, email"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none"
+                            className="bg-transparent py-1 focus:outline-none text-gray-700 placeholder-gray-400 border-none"
                         />
                     </div>
                 </div>

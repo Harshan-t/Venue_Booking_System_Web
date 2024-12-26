@@ -74,14 +74,14 @@ function History() {
         <h2 className="text-3xl font-bold text-gray-700 mb-8">History</h2>
 
         <div className="flex justify-start p-4">
-          <div className="flex items-center w-full max-w-md bg-white rounded-full shadow-sm px-7 py-1">
-            <FaSearch className="text-gray-400 mr-3 text-xl" />
+          <div className="bg-white flex items-center w-[300px] max-w-md shadow-sm border-2 rounded-2xl shadow-sm px-4 py-1">
+            <FaSearch className="text-gray-400 mr-3 text-xl" size={19} />
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search History..."
               value={searchQuery}
               onChange={handleSearchChange}
-              className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none text-lg"
+              className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none p-1"
             />
           </div>
         </div>

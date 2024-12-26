@@ -154,14 +154,14 @@ function Venue() {
           <div className="flex justify-start p-4">
             <div>
 
-              <div className="bg-white flex items-center w-full max-w-md shadow-sm border-2 rounded-2xl shadow-sm px-6 py-1">
-                <FaSearch className="text-gray-400 mr-3 text-xl" />
+              <div className="bg-white flex items-center w-[300px] max-w-md shadow-sm border-2 rounded-2xl shadow-sm px-4 py-1">
+                <FaSearch className="text-gray-400 mr-3 text-xl" size={19} />
                 <input
                   type="text"
                   placeholder="Search Venues..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none text-lg"
+                  className="bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 w-full border-none p-1"
                 />
               </div>
             </div>
