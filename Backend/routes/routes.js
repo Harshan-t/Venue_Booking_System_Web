@@ -25,6 +25,8 @@ router.route('/bookings')
 router.route('/userqueries')
     .post(staffController.insertQuery);
 
+router.route('/calander')
+    .get(staffController.getApprovedBookings);
 // Admin Routes
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -65,5 +67,7 @@ router.route('/query')
 
 router.route('/query/:id/status')
     .put(AdminController.updateQueries)
+
+
 
 module.exports = router
