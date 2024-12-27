@@ -33,7 +33,7 @@ function Conformation() {
             const payload = {
                 Venue_Name: data.Venue,
                 Location: data.Venuelocation,
-                Booking_Date: data.Date,
+                Booking_Date: data.BookingDate,
                 From_Time: data.st_time,
                 To_Time: data.ed_time,
                 Booked_Capacity: data.no_par,
@@ -61,7 +61,7 @@ function Conformation() {
             <div className='bg-[#F5F6FA] h-full min-h-screen'>
                 <Navbar username={data.name} usermail={data.email} />
                 <div className='relative'>
-                    <div class="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
+                    <div className="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
                     <img src={Titlebar} alt="" className='w-full h-[250px] object-cover' />
                     <div className='z-50 flex justify-center absolute top-[90px] text-white font-bold text-4xl left-20'>Book Venue</div>
                     <div className='absolute z-50 top-[130px] left-20 text-white'>Home &gt; Booking &gt; Confirm</div>
@@ -90,7 +90,7 @@ function Conformation() {
                         <hr className='mb-8'></hr>
 
                         <div className="flex flex-col text-lg">
-                            <Detail label='Date' value={data.Date} />
+                            <Detail label='Date' value={data.BookingDate} />
                             <div className="flex justify-between max-w-[500px]">
                                 <Detail label='Start Time' value={data.st_time} />
                                 <Detail label='End Time' value={data.ed_time} />
@@ -104,8 +104,8 @@ function Conformation() {
                         </div>
 
                         <div className='flex justify-between mt-5'>
-                            <button onClick={() => navigate('/book', { state: data })} type="button" class="flex items-center justify-center text-white mr-4 bg-[#504a61] hover:bg-[#6f6787] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-2.5 text-center"><IoArrowForwardCircleOutline className='mr-1 mt-[3px] size-[20px] stroke-1 rotate-180' />Back</button>
-                            <button onClick={handleConfirm} type="button" class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full h-full sm:w-auto px-4 py-2.5 text-center">Confirm</button>
+                            <button onClick={() => navigate('/book', { state: data })} type="button" className="flex items-center justify-center text-white mr-4 bg-[#504a61] hover:bg-[#6f6787] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-2.5 text-center"><IoArrowForwardCircleOutline className='mr-1 mt-[3px] size-[20px] stroke-1 rotate-180' />Back</button>
+                            <button onClick={handleConfirm} type="button" className="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full h-full sm:w-auto px-4 py-2.5 text-center">Confirm</button>
                         </div>
                     </div>
                 </div>

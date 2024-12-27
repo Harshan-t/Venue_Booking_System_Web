@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import axios from "axios";
-import { UserContext } from '../../UserContext.jsx'
-import Navbar from '../components/Navbar'
-import Header from '../components/header.jsx'
+
+import { UserContext } from '../../UserContext.jsx';
+import Navbar from '../components/Navbar';
+import Header from '../components/header.jsx';
 
 function CalendarPage() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]); // All events
+  const [filteredEvents, setFilteredEvents] = useState([]); // Filtered events
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]); // Venues
   const { userData } = useContext(UserContext);
 
   const setVenueDetails = async () => {
@@ -53,15 +56,25 @@ function CalendarPage() {
         }));
 
         setEvents(calendarEvents);
+        setFilteredEvents(calendarEvents); // Initially show all events
       } else {
         console.warn("No bookings found in response.");
         setEvents([]);
+        setFilteredEvents([]);
       }
     } catch (error) {
       console.error("Error fetching bookings:", error);
       setError(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const filteredEventsHandler = (venue) => {
+    if (venue) {
+      setFilteredEvents(events.filter((event) => event.title === venue));
+    } else {
+      setFilteredEvents(events);
     }
   };
 
@@ -83,7 +96,7 @@ function CalendarPage() {
   }
 
   return (
-    <div className="md:flex-row h-screen  bg-gray-100">
+    <div className="md:flex-row h-screen bg-gray-100">
       {userData.role === "user" ? (
         <Navbar username={userData.name} usermail={userData.email} />
       ) : (
@@ -91,15 +104,13 @@ function CalendarPage() {
       )}
       <div className="flex flex-col md:flex-row w-[1530px]">
         <div className="m-3 w-[350px] bg-white shadow-lg space-y-6 p-2 pl-4 pt-4 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Upcoming Events</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Upcoming Events</h2>
           <div className=" max-h-[550px] overflow-auto">
-
             <ul className="space-y-6">
-              {events.map((event, index) => (
+              {filteredEvents.map((event, index) => (
                 <li
                   key={index}
                   className="p-4 bg-white w-[300px] shadow-md rounded-lg hover:shadow-xl cursor-default transition duration-300 transform hover:scale-105"
-
                 >
                   <h3 className="font-semibold text-lg text-indigo-600">{event.title}</h3>
                   <p className="text-sm text-gray-600">
@@ -117,11 +128,25 @@ function CalendarPage() {
           </div>
         </div>
 
-        <div className="m-3 p-4 overflow-auto h-[640px] w-[1100px] rounded-2xl bg-white shadow-xl">
+        <div className="relative m-3 p-4 overflow-auto h-[640px] w-[1100px] rounded-2xl bg-white shadow-xl">
+          <select
+            name="dropdown"
+            id=""
+            className="absolute left-[200px] bg-[#2c3e50] cursor-pointer text-white h-[40px] w-[140px] p-2 rounded-md"
+            onChange={(e) => filteredEventsHandler(e.target.value)}
+          >
+            <option value="">All Venues</option>
+            {products.map((venue) => (
+              <option key={venue.id} value={venue.name}>
+                {venue.name}
+              </option>
+            ))}
+          </select>
+
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
-            events={events}
+            events={filteredEvents} // Use filtered events here
             headerToolbar={{
               left: "prev,next today",
               center: "title",
@@ -134,8 +159,6 @@ function CalendarPage() {
             eventClick={(info) => setSelectedEvent(info.event)}
             eventClassNames="transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer hover:shadow-xl"
             dayHeaderClassNames="bg-indigo-600 text-white font-bold"
-            dayClassNames="hover:bg-indigo-100 transition-all duration-200 ease-in-out cursor-pointer"
-            headerClassNames="bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold"
           />
         </div>
 
@@ -168,4 +191,3 @@ function CalendarPage() {
 }
 
 export default CalendarPage;
-

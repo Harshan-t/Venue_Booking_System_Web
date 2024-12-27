@@ -18,7 +18,7 @@ function BookVenue() {
     const [Venuelocation, setVenuelocation] = useState(data.Venuelocation || '')
     const [st_time, setst_time] = useState(data.st_time || '')
     const [ed_time, seted_time] = useState(data.ed_time || '')
-    const [Date, setDate] = useState(data.Date || '')
+    const [BookingDate, setDate] = useState(data.BookingDate || '')
     const [no_par, setno_par] = useState(data.no_par || '')
     const [max_cap, setmax_cap] = useState(data.max_cap || '')
     const [Desc, setDesc] = useState(data.Desc || '')
@@ -35,6 +35,7 @@ function BookVenue() {
     const setDetail = async () => {
         const result = await axios.get('http://localhost:8000/bookings');
         setdetails(result.data.bookings.filter(booking => booking.Status === 'Approved'));
+        
     };
 
     useEffect(() => {
@@ -54,17 +55,19 @@ function BookVenue() {
     useEffect(() => {
         fetchdata()
     }, [Venue]);
+    
 
     const CheckBooking = () => {
-        // const booking = details.filter(booking => booking.Venue_Name === Venue && booking.Booking_Date === Date && ((booking.Start_Time >= st_time && booking.End_Time <= st_time) || (booking.Start_Time >= ed_time && booking.End_Time <= ed_time)))
-        console.log(details.filter(detail => detail.Booking_Date.split('T')[0] === Date), Date);
+        const booking = details.filter(detail => new Date(detail.Booking_Date).toLocaleDateString() === new Date(BookingDate).toLocaleDateString() && detail.Venue_Name === Venue && (detail.From_Time.slice(0, 5) >= st_time && detail.From_Time.slice(0, 5) < ed_time) || (detail.To_Time.slice(0, 5) >st_time && detail.To_Time.slice(0, 5) < ed_time))
+        console.log(BookingDate);
         
-        // if(booking){
-        //     alert('Venue is already booked for the selected date and time')
-        // }
-        // else{
-            navigate('/conformation', { state: { Date, st_time, ed_time, Venue, Venuelocation, no_par, max_cap, Desc } })
-        // }
+        
+        if(booking.length > 0){
+            alert('Venue is already booked for the selected date and time')
+        }
+        else{
+            navigate('/conformation', { state: { BookingDate, st_time, ed_time, Venue, Venuelocation, no_par, max_cap, Desc } })
+        }
     }
 
     return (
@@ -93,7 +96,7 @@ function BookVenue() {
                 <div className='flex flex-col items-center justify-center'>
                     <div className='bg-white w-[780px] p-8 rounded-lg shadow-2xl m-8'>
 
-                        <form onSubmit={CheckBooking}>
+                        <form onSubmit={(e) => { e.preventDefault(); CheckBooking()}}>
                             <div>
                                 <div className='text-2xl font-[500] mb-2'>
                                     Booking Form
@@ -104,7 +107,7 @@ function BookVenue() {
                                     <input
                                         type="date"
                                         id="date"
-                                        value={Date}
+                                        value={BookingDate}
                                         className="bg-gray-50 placeholder-red-50::placeholder border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 focus:outline-none focus:border-[#1a73e8] focus:shadow-md"
                                         onChange={(e) => setDate(e.target.value)}
                                         required
@@ -211,7 +214,7 @@ function BookVenue() {
                                 <button
                                     type="submit"
                                     className="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-2.5 text-center"
-                                    onSubmit={() => navigate('/conformation', { state: { Date, st_time, ed_time, Venue, Venuelocation, no_par, max_cap, Desc } })}
+                                    onSubmit={() => navigate('/conformation', { state: { BookingDate, st_time, ed_time, Venue, Venuelocation, no_par, max_cap, Desc } })}
                                 >
                                     Next<IoArrowForwardCircleOutline className='ml-1 mt-[3px] size-[20px] stroke-1' />
                                 </button>
