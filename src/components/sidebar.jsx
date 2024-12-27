@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaUserFriends, FaMapMarkedAlt, FaBook, FaComments, FaHistory, FaMoon, FaPowerOff, FaCheckCircle } from "react-icons/fa";
+import { FaUserFriends, FaMapMarkedAlt, FaBook, FaComments, FaHistory, FaMoon, FaPowerOff, FaCalendarAlt } from "react-icons/fa";
 
 const Sidebar = () => {
     const location = useLocation();
@@ -15,6 +15,7 @@ const Sidebar = () => {
         { name: 'Staff', icon: <FaUserFriends />, route: "/staffpage" },
         { name: 'Venues', icon: <FaMapMarkedAlt />, route: "/venue" },
         { name: 'Booking Confirmation', icon: <FaBook />, route: "/booking" },
+        { name: 'Calendar', icon: <FaCalendarAlt />, route: "/availablevenue" },
         { name: 'Queries', icon: <FaComments />, route: "/query" },
         { name: 'History', icon: <FaHistory />, route: "/history" },
     ];

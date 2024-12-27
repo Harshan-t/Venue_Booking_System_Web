@@ -22,6 +22,7 @@ import UserBookings from '../pages/UserBookings.jsx'
 import UserQueries from '../pages/UserQueries.jsx'
 import UserVenue from '../pages/UserVenue.jsx'
 import { Outlet } from 'react-router-dom'
+import CalendarPage from '../pages/availablevenue.jsx'
 
 const routes = [
     {
@@ -106,6 +107,10 @@ const routes = [
     {
         path: '/conformation',
         element: <ProtectedRoute user={{ role: 'user' }}><Conformation /></ProtectedRoute>
+    },
+    {
+        path: '/availablevenue',
+        element: <CalendarPage />
     },
 ]
 

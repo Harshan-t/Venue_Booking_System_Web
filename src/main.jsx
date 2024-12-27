@@ -12,7 +12,7 @@ const Layout = () => {
   return (
     <div >
       {
-        location.pathname !== '/login' && location.pathname !== '/register' && location.pathname !== '/' && location.pathname !== '/home' && location.pathname !== '/uservenue' && location.pathname !== '/user/dashboard' && location.pathname !== '/user/bookings' && location.pathname !== '/user/help' && location.pathname !== '/book' && location.pathname !== '/conformation' &&
+        location.pathname !== '/login' && location.pathname !== '/register' && location.pathname !== '/' && location.pathname !== '/home' && location.pathname !== '/uservenue' && location.pathname !== '/user/dashboard' && location.pathname !== '/user/bookings' && location.pathname !== '/user/help' && location.pathname !== '/book' && location.pathname !== '/conformation' && location.pathname !== '/availablevenue' &&
         (
           <Header />
         )

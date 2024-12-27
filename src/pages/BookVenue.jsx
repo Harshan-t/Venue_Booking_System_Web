@@ -14,7 +14,6 @@ function BookVenue() {
     const data = location.state || {};
     const navigate = useNavigate();
 
-
     const [Venue, setVenue] = useState(data.Venue || '')
     const [Venuelocation, setVenuelocation] = useState(data.Venuelocation || '')
     const [st_time, setst_time] = useState(data.st_time || '')
@@ -24,6 +23,8 @@ function BookVenue() {
     const [max_cap, setmax_cap] = useState(data.max_cap || '')
     const [Desc, setDesc] = useState(data.Desc || '')
     const [options, setoptions] = useState([])
+    const [details, setdetails] = useState([])
+
 
     const setOptionsDetails = async () => {
         const response = await axios.get('http://localhost:8000/venues')
@@ -31,28 +32,47 @@ function BookVenue() {
         setoptions(names)
     };
 
-    useEffect(() => {
-        setOptionsDetails()
-    }, []);
+    const setDetail = async () => {
+        const result = await axios.get('http://localhost:8000/bookings');
+        setdetails(result.data.bookings.filter(booking => booking.Status === 'Approved'));
+    };
 
     useEffect(() => {
-        const fetchdata = async () => {
-            const response = await axios.get('http://localhost:8000/venues')
-            const selectedvenue = response.data.venues.find(venue => Venue === venue.name)
-            if (selectedvenue) {
-                setmax_cap(selectedvenue.capacity)
-                setVenuelocation(selectedvenue.location)
-            }
+        setDetail();
+        setOptionsDetails();
+    }, []);
+
+    const fetchdata = async () => {
+        const response = await axios.get('http://localhost:8000/venues')
+        const selectedvenue = response.data.venues.find(venue => Venue === venue.name)
+        if (selectedvenue) {
+            setmax_cap(selectedvenue.capacity)
+            setVenuelocation(selectedvenue.location)
         }
+    };
+
+    useEffect(() => {
         fetchdata()
     }, [Venue]);
+
+    const CheckBooking = () => {
+        // const booking = details.filter(booking => booking.Venue_Name === Venue && booking.Booking_Date === Date && ((booking.Start_Time >= st_time && booking.End_Time <= st_time) || (booking.Start_Time >= ed_time && booking.End_Time <= ed_time)))
+        console.log(details.filter(detail => detail.Booking_Date.split('T')[0] === Date), Date);
+        
+        // if(booking){
+        //     alert('Venue is already booked for the selected date and time')
+        // }
+        // else{
+            navigate('/conformation', { state: { Date, st_time, ed_time, Venue, Venuelocation, no_par, max_cap, Desc } })
+        // }
+    }
 
     return (
         <div>
             <div className='bg-[#F5F6FA] min-h-screen'>
                 <Navbar />
                 <div className='relative'>
-                    <div class="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
+                    <div className="absolute inset-0 bg-black-600/50 backdrop-blur-sm z-10"></div>
                     <img src={Titlebar} alt="" className='w-full h-[250px] object-cover' />
                     <div className='z-50 flex justify-center absolute top-[90px] text-white font-bold text-4xl left-20'>Book Venue</div>
                     <div className='absolute z-50 top-[130px] left-20 text-white'>Home &gt; Booking</div>
@@ -73,7 +93,7 @@ function BookVenue() {
                 <div className='flex flex-col items-center justify-center'>
                     <div className='bg-white w-[780px] p-8 rounded-lg shadow-2xl m-8'>
 
-                        <form onSubmit={() => navigate('/conformation', { state: { Date, st_time, ed_time, Venue, Venuelocation, no_par, max_cap, Desc } })}>
+                        <form onSubmit={CheckBooking}>
                             <div>
                                 <div className='text-2xl font-[500] mb-2'>
                                     Booking Form

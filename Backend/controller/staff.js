@@ -27,7 +27,7 @@ class StaffController {
             Status: "Awaiting..",
             Description: req.body.Description,
         }
-        
+
         try {
             let sql = `INSERT INTO VenueBookings (Venue_Name, Location, Booking_Date, From_Time, To_Time, Booked_Capacity, Venue_Capacity, Staff, email, Status, Description) VALUES ('${details.Venue_Name}', '${details.Location}', '${details.Booking_Date}', '${details.From_Time}', '${details.To_Time}', '${details.Booked_Capacity}', '${details.Venue_Capacity}', '${details.Staffname}', '${details.Email}', '${details.Status}', '${details.Description}')`
 
@@ -39,13 +39,13 @@ class StaffController {
         }
     }
 
-    getbookings = async (req, res) =>{
+    getbookings = async (req, res) => {
         const sql = `SELECT * FROM VenueBookings ORDER BY id DESC`
         const result = await db.query(sql)
-        res.json({ bookings: result[0] })        
+        res.json({ bookings: result[0] })
     }
 
-    insertQuery = async (req, res) =>{
+    insertQuery = async (req, res) => {
         let details = {
             Venue_Name: req.body.Venue_Name,
             subject: req.body.subject,
@@ -59,6 +59,21 @@ class StaffController {
         await db.query(sql)
         res.json({ message: "Query added successfully" })
     }
+    getApprovedBookings = async (req, res) => {
+        try {
+            const query = `
+            SELECT Venue_Name, Booking_Date, From_Time, To_Time, Description, staff, email
+            FROM VenueBookings
+            WHERE Status = 'Approved'
+          `;
+            const [rows] = await db.query(query);
+
+            res.json(rows);
+        } catch (error) {
+            console.error("Error fetching approved bookings:", error);
+            res.status(500).json({ message: "An error occurred while fetching bookings" });
+        }
+    };
 }
 
 module.exports = new StaffController();

@@ -42,16 +42,22 @@ function Dashboardhome() {
         }
     };
 
+    const setBookingDetail = async () => {
+        const result = await axios.get('http://localhost:8000/bookings');
+        setBooked(result.data.bookings.filter(booking => booking.Status === 'Approved' && booking.Date.getmonth() === new Date().getmonth()));
+    };
+
     useEffect(() => {
         setstaffdetails();
         setVenueDetails();
+        setBookingDetail();
     }, []);
 
     const cardData = [
         { title: "Total Staffs", value: Staff.length, icon: <FaUser className="text-purple-500" /> },
         { title: "Total Venues", value: Venues.length, icon: <FaMapMarkerAlt className="text-yellow-400" /> },
-        { title: "Booked Venues", value: 0, icon: <FaClipboardCheck className="text-green-500" /> },
-        { title: "Unreserved Venues", value: 0, icon: <FaTimesCircle className="text-red-500" /> },
+        { title: "Booked Venues", value: Booked.length, icon: <FaClipboardCheck className="text-green-500" /> },
+        { title: "Unreserved Venues", value: 20, icon: <FaTimesCircle className="text-red-500" /> },
     ];
 
     return (
@@ -83,10 +89,10 @@ function Dashboardhome() {
                     <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold mb-4">Usage details</h3>
                         <Link to='/analyticsvenue' state={[
-                            { title: "Total Staffs", value: 0, icon: "FaUser" },
-                            { title: "Total Venues", value: 0, icon: "FaMapMarkerAlt" },
-                            { title: "Booked Venues", value: 0, icon: "FaClipboardCheck" },
-                            { title: "Unreserved Venues", value: 0, icon: "FaTimesCircle" },
+                            { title: "Total Staffs", value: Staff.length, icon: "FaUser" },
+                            { title: "Total Venues", value: Venues.length, icon: "FaMapMarkerAlt" },
+                            { title: "Booked Venues", value: 30, icon: "FaClipboardCheck" },
+                            { title: "Unreserved Venues", value: 20, icon: "FaTimesCircle" },
                         ]}>
                             <button className="flex items-center bg-[#dbeafe] text-[#2563eb] border border-[#2563eb] p-1 px-4 rounded-2xl">
                                 Detailed Usage <FaArrowRight className="ml-2" />

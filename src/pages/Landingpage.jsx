@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
+import { TypeAnimation } from 'react-type-animation';
 import Navbar from '../components/Navbar.jsx'
 import { UserContext } from '../../UserContext.jsx';
-import { TypeAnimation } from 'react-type-animation';
 import myImage from '../assets/Image.png'
 import Book from '../assets/Book.png'
 import Venuepng from '../assets/Venuepng.svg'
@@ -35,7 +34,7 @@ function Landingpage() {
                             </div>
                         <div className='text-[#4880ff] font-bold text-4xl mt-4'>Venue & Event booking Space</div>
                         <div className='font-bold text-6xl mt-4'>Experience Seamless Venue and Event Booking at your Fingertips......</div>
-                        <div className='mt-5 text-sm'>The website is a one-stop platform for students to book venues and events on campus, simplifying the process and ensuring efficient utilization of resources.</div>
+                        <div className='mt-5 text-sm'>The website is a one-stop platform for Staff to book venues and events on campus, simplifying the process and ensuring efficient utilization of resources.</div>
                         <Link to="/book">
                             <button type="button" className="text-[#2563eb] border-[2px] border-[#2563eb] bg-[#dbeafe] rounded-full py-2.5 text-center mt-5 size-1/5">Book Now</button>
                         </Link>
@@ -50,9 +49,9 @@ function Landingpage() {
                     <div className='flex justify-evenly'>
                         <div className="flex flex-col items-center my-6 bg-white border rounded-xl shadow-2xl w-96 text-center p-5 py-7">
                             <div className='border bg-[#dbeafe] p-4 rounded-xl'><MdOutlineLiveHelp size="80px" color='#336ceb' strokeWidth={0} /></div>
-                            <div className='font-bold text-lg'>Queries</div>
+                            <div className='font-bold text-lg'>Available Venues</div>
                             <div className='w-64'>Quick and Easy Registration: Get started on our software platform with a simple account creation process.</div>
-                            <button type='submit' onClick={() => { navigate("/user/help") }} className="text-[#336ceb] border-[2px] border-[#336ceb] bg-[#dbeafe] rounded-lg py-2.5 text-center font-bold mt-5 size-3/5">Help</button>
+                            <button type='submit' onClick={() => { navigate("/availablevenue") }} className="text-[#336ceb] border-[2px] border-[#336ceb] bg-[#dbeafe] rounded-lg py-2.5 text-center font-bold mt-5 size-3/5">Calendar</button>
                         </div>
                         <div className="flex flex-col items-center my-6 bg-white border-2 rounded-xl shadow-2xl w-96 text-center p-5 py-7">
                             <div className='border bg-[#dbeafe] p-4 rounded-xl '><img src={Venuepng} alt="" /></div>

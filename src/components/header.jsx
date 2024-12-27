@@ -28,7 +28,7 @@ function Header() {
         <header className="sticky top-0 shadow-md py-4 px-2 bg-white z-10">
             <nav className="flex items-center justify-between">
                 <div className="flex items-center">
-                    <Link to="/">
+                    <Link to="/dashboardhome">
                         <img src={Logo} alt="Logo" />
                     </Link>
                 </div>
