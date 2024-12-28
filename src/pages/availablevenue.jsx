@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-
+import { Link } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -47,11 +47,11 @@ function CalendarPage() {
           staff: booking.staff,
           email: booking.email,
           title: booking.Venue_Name,
-          start: `${booking.Booking_Date.slice(0, 10)}T${booking.From_Time}`,
-          end: `${booking.Booking_Date.slice(0, 10)}T${booking.To_Time}`,
+          start: booking.Booking_Date,
+          end: booking.Booking_Date,
           description: booking.Description,
-          backgroundColor: "#4caf50",
-          borderColor: "#388e3c",
+          backgroundColor: "#4285f4",
+          borderColor: "#4285f4",
           textColor: "#fff",
         }));
 
@@ -102,28 +102,42 @@ function CalendarPage() {
       ) : (
         <Header />
       )}
-      <div className="flex flex-col md:flex-row w-[1530px]">
-        <div className="m-3 w-[350px] bg-white shadow-lg space-y-6 p-2 pl-4 pt-4 rounded-lg">
+      <div className="flex flex-col md:flex-row w-[1530px] ">
+        <div className="m-3 w-[375px] bg-white shadow-lg space-y-6 p-2 pl-4 pt-4 rounded-lg ">
+        <div className="flex ">
+          <Link to={-1}>
+            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full rotate-180 text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+              </svg>
+              <span class="sr-only">Icon description</span>
+            </button>
+          </Link>
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Upcoming Events</h2>
+        </div>
           <div className=" max-h-[550px] overflow-auto">
-            <ul className="space-y-6">
-              {filteredEvents.map((event, index) => (
-                <li
-                  key={index}
-                  className="p-4 bg-white w-[300px] shadow-md rounded-lg hover:shadow-xl cursor-default transition duration-300 transform hover:scale-105"
-                >
-                  <h3 className="font-semibold text-lg text-indigo-600">{event.title}</h3>
-                  <p className="text-sm text-gray-600">
-                    {new Date(event.start).toLocaleString()}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Staff: {event.staff}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Email: {event.email}
-                  </p>
-                </li>
-              ))}
+            <ul className="space-y-6 flex flex-col items-center h-[530px] scrollbar-none ">
+              {filteredEvents.length != 0 ? (
+                filteredEvents.map((event, index) => (
+                  <li
+                    key={index}
+                    className="p-4 mt-2 border-2 bg-white w-[300px] rounded-lg hover:shadow-xl cursor-default transition duration-300 transform hover:scale-105"
+                  >
+                    <h3 className="font-semibold text-lg text-indigo-600">{event.title}</h3>
+                    <p className="text-sm text-gray-600">
+                      {new Date(event.start).toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Staff: {event.staff}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Email: {event.email}
+                    </p>
+                  </li>
+                )
+                )) : (
+                <li className="text-gray-500 text-center">No events found</li>
+              )}
             </ul>
           </div>
         </div>

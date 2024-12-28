@@ -91,8 +91,10 @@ function BookingConfirmation() {
     return [...locationSet];
   }, [venues]);
 
+  
   const uniqueStaff = useMemo(() => {
-    const Staffset = new Set(Bookings.map((booking) => booking.Staff));
+    const temp = Bookings.filter((booking) => booking.Status === "Awaiting..");
+    const Staffset = new Set(temp.map((booking) => booking.Staff));
     return [...Staffset];
   }, [venues]);
 
@@ -111,6 +113,8 @@ function BookingConfirmation() {
 
       const matchesLocation = selectedLocation === "" || Location === selectedLocation;
 
+      const matchesStaff = selectedStaff === "" || Staff === selectedStaff;
+
       const matchesDate =
         selectedDate === "" ||
         (Booking_Date && new Date(Booking_Date).toLocaleDateString() === new Date(selectedDate).toLocaleDateString());
@@ -123,9 +127,9 @@ function BookingConfirmation() {
 
       const isAwaiting = Status?.trim() === "Awaiting..";
 
-      return matchesSearch && matchesVenue && matchesDate && matchesLocation && matchesFromTime && matchesToTime && isAwaiting;
+      return matchesVenue && matchesDate && matchesLocation && matchesStaff && matchesFromTime && matchesToTime && isAwaiting;
     });
-  }, [Bookings, searchQuery, selectedLocation, selectedVenue, selectedDate, selectedFromTime, selectedToTime]);
+  }, [Bookings, searchQuery, selectedLocation, selectedStaff, selectedVenue, selectedDate, selectedFromTime, selectedToTime]);
 
 
   return (
@@ -183,11 +187,11 @@ function BookingConfirmation() {
           <hr className="rotate-90 border w-12 ml-[-12px] mr-[-12px]" />
           <div className="flex flex-col p-1 h-full items-center justify-center">
             <select
-              onChange={handleStaffChange}
               value={selectedStaff}
+              onChange={handleStaffChange}
               className="w-[120px] py-2 cursor-pointer rounded-lg focus:outline-none bg-white text-gray-700"
             >
-              <option value="">Staff Name</option>
+              <option value="">All Staffs</option>
               {uniqueStaff.map((Staff, index) => (
                 <option key={index} value={Staff}>
                   {Staff}

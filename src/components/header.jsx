@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/header.css";
 import { UserContext } from "../../UserContext.jsx";
 
@@ -7,11 +7,13 @@ import Logo from "../assets/Logo.png";
 
 function Header() {
     const [isPopoverVisible, setPopoverVisible] = useState(false);
+    const navigate = useNavigate();
     const popoverRef = useRef(null);
     const { userData } = useContext(UserContext);
 
     const togglePopover = () => {
         setPopoverVisible((prev) => !prev);
+        navigate("/dashboardhome");
     };
 
     useEffect(() => {
