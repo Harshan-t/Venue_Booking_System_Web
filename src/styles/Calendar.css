@@ -1,0 +1,19 @@
+.fc-today-button,
+.fc-prev-button,
+.fc-next-button,
+.fc-dayGridMonth-button, 
+.fc-timeGridWeek-button, 
+.fc-timeGridDay-button {
+    background-color: #2563eb !important; /* Blue background for "Today" */
+    color: white !important;
+    border: 1px solid #2563eb !important;
+}
+
+.fc-today-button:hover,
+.fc-prev-button:hover,
+.fc-next-button:hover,
+.fc-dayGridMonth-button:hover,
+.fc-timeGridWeek-button:hover,
+.fc-timeGridDay-button:hover {
+    background-color: #0056b3 !important;
+}

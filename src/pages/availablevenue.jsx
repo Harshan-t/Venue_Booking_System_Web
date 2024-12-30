@@ -6,6 +6,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
+import "../styles/Calendar.css";
+
 import { UserContext } from '../../UserContext.jsx';
 import Navbar from '../components/Navbar';
 import Header from '../components/header.jsx';
@@ -42,13 +44,15 @@ function CalendarPage() {
       const response = await axios.get("http://localhost:8000/calander");
       if (response.data && Array.isArray(response.data)) {
         const approvedBookings = response.data;
+        console.log(approvedBookings.map((booking) => booking.Booking_Date.slice(0, 8) + (parseInt(booking.Booking_Date.slice(8, 10)) + 1)));
+
 
         const calendarEvents = approvedBookings.map((booking) => ({
           staff: booking.staff,
           email: booking.email,
           title: booking.Venue_Name,
-          start: booking.Booking_Date,
-          end: booking.Booking_Date,
+          start: `${booking.Booking_Date.slice(0, 8) + (parseInt(booking.Booking_Date.slice(8, 10)) + 1)}T${booking.From_Time}`,
+          end: `${booking.Booking_Date.slice(0, 8) + (parseInt(booking.Booking_Date.slice(8, 10)) + 1)}T${booking.To_Time}`,
           description: booking.Description,
           backgroundColor: "#4285f4",
           borderColor: "#4285f4",
@@ -104,17 +108,17 @@ function CalendarPage() {
       )}
       <div className="flex flex-col md:flex-row w-[1530px] ">
         <div className="m-3 w-[375px] bg-white shadow-lg space-y-6 p-2 pl-4 pt-4 rounded-lg ">
-        <div className="flex ">
-          <Link to={-1}>
-            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full rotate-180 text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-              </svg>
-              <span class="sr-only">Icon description</span>
-            </button>
-          </Link>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Upcoming Events</h2>
-        </div>
+          <div className="flex ">
+            <Link to={-1}>
+              <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full rotate-180 text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                </svg>
+                <span class="sr-only">Icon description</span>
+              </button>
+            </Link>
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Upcoming Events</h2>
+          </div>
           <div className=" max-h-[550px] overflow-auto">
             <ul className="space-y-6 flex flex-col items-center h-[530px] scrollbar-none ">
               {filteredEvents.length != 0 ? (
@@ -146,12 +150,12 @@ function CalendarPage() {
           <select
             name="dropdown"
             id=""
-            className="absolute left-[200px] bg-[#2c3e50] cursor-pointer text-white h-[40px] w-[140px] p-2 rounded-md"
+            className="absolute left-[200px] bg-[#2563eb] cursor-pointer text-white h-[40px] w-[140px] p-2 rounded-md"
             onChange={(e) => filteredEventsHandler(e.target.value)}
           >
             <option value="">All Venues</option>
             {products.map((venue) => (
-              <option key={venue.id} value={venue.name}>
+              <option key={venue.id} value={venue.name} className="bg-white text-black">
                 {venue.name}
               </option>
             ))}
@@ -166,13 +170,12 @@ function CalendarPage() {
               center: "title",
               right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
-            eventColor="#007bff"
             eventTextColor="#fff"
             eventBorderColor="#0056b3"
             height="auto"
             eventClick={(info) => setSelectedEvent(info.event)}
             eventClassNames="transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer hover:shadow-xl"
-            dayHeaderClassNames="bg-indigo-600 text-white font-bold"
+            dayHeaderClassNames="bg-[#2563eb] text-white font-bold"
           />
         </div>
 

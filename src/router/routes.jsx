@@ -23,6 +23,7 @@ import UserQueries from '../pages/UserQueries.jsx'
 import UserVenue from '../pages/UserVenue.jsx'
 import { Outlet } from 'react-router-dom'
 import CalendarPage from '../pages/availablevenue.jsx'
+import AdminTable from '../components/AdminTable.jsx'
 
 const routes = [
     {
@@ -112,6 +113,10 @@ const routes = [
         path: '/availablevenue',
         element: <CalendarPage />
     },
+    {
+        path: '/admintable',
+        element: <AdminTable />
+    }
 ]
 
 export default routes

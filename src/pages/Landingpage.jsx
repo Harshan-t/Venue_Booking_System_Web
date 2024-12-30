@@ -49,7 +49,7 @@ function Landingpage() {
                     <div className='flex justify-evenly'>
                         <div className="flex flex-col items-center my-6 bg-white border rounded-xl shadow-2xl w-96 text-center p-5 py-7">
                             <div className='border bg-[#dbeafe] p-4 rounded-xl'><MdOutlineLiveHelp size="80px" color='#336ceb' strokeWidth={0} /></div>
-                            <div className='font-bold text-lg'>Available Venues</div>
+                            <div className='font-bold text-lg'>Booked Slots</div>
                             <div className='w-64'>Quick and Easy Registration: Get started on our software platform with a simple account creation process.</div>
                             <button type='submit' onClick={() => { navigate("/availablevenue") }} className="text-[#336ceb] border-[2px] border-[#336ceb] bg-[#dbeafe] rounded-lg py-2.5 text-center font-bold mt-5 size-3/5">Calendar</button>
                         </div>

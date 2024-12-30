@@ -20,6 +20,9 @@ function BookingConfirmation() {
   const [selectedFromTime, setSelectedFromTime] = useState("");
   const [selectedToTime, setSelectedToTime] = useState("");
 
+  const [start, setstart] = useState(0);
+  const limit = 10;
+
   const setVenueDetails = async () => {
     try {
       const response = await axios.get("http://localhost:8000/venues");
@@ -91,7 +94,7 @@ function BookingConfirmation() {
     return [...locationSet];
   }, [venues]);
 
-  
+
   const uniqueStaff = useMemo(() => {
     const temp = Bookings.filter((booking) => booking.Status === "Awaiting..");
     const Staffset = new Set(temp.map((booking) => booking.Staff));
@@ -131,6 +134,12 @@ function BookingConfirmation() {
     });
   }, [Bookings, searchQuery, selectedLocation, selectedStaff, selectedVenue, selectedDate, selectedFromTime, selectedToTime]);
 
+  const handlenext = () => {
+    setstart(start + limit);
+  };
+  const handleprevious = () => {
+    setstart(start - limit);
+  };
 
   return (
     <div className="dashboard flex bg-gray-100 min-h-screen">
@@ -232,8 +241,8 @@ function BookingConfirmation() {
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <div className="relative w-[1102px] border bg-white overflow-x-auto sm:rounded-lg">
+        <div className="flex justify-center w-[1102px] border">
+          <div className="w-[1102px] bg-white shadow-lg rounded-lg">
             <table className="w-[1100px] text-sm text-left text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
@@ -249,10 +258,10 @@ function BookingConfirmation() {
               </thead>
               <tbody>
                 {filteredBookings.length > 0 ? (
-                  filteredBookings.map((product) => (
+                  filteredBookings.slice(start, start + limit).map((product) => (
                     <tr
                       key={`${product.Venue_Name}-${product.Booking_Date}`}
-                      className="bg-white border-b hover:bg-gray-50 cursor-pointer"
+                      className="bg-white border-t hover:bg-gray-50 cursor-pointer"
                       onClick={() => handleRowClick(product)}
                     >
                       <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -291,6 +300,28 @@ function BookingConfirmation() {
                 )}
               </tbody>
             </table>
+            {(
+              <tfoot className="w-[100%]">
+                <div className="w-[1090px]">
+                  <tr className='flex mt-5 mb-4 mx-5 justify-between'>
+                    <div className="text-center mr-4 text-gray-500">
+                      {start > 0 ? (
+                        <button onClick={handleprevious} className="bg-[#e5e4e9] text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-[#e8e8e8]">Previous</button>
+                      ) : (
+                        <button className="bg-[#f5f5f5] text-gray-400 font-semibold py-2 px-4 rounded-lg cursor-not-allowed" disabled>Previous</button>
+                      )}
+                    </div>
+                    <div className="text-center text-gray-500">
+                      {start + limit < filteredBookings.length ? (
+                        <button onClick={handlenext} className="bg-[#e5e4e9] text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-[#e8e8e8]">Next</button>
+                      ) : (
+                        <button className="bg-[#f5f5f5] text-gray-400 font-semibold py-2 px-4 rounded-lg cursor-not-allowed" disabled>Next</button>
+                      )}
+                    </div>
+                  </tr>
+                </div>
+              </tfoot>
+            )}
           </div>
         </div>
       </div>

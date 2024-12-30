@@ -13,7 +13,6 @@ function Header() {
 
     const togglePopover = () => {
         setPopoverVisible((prev) => !prev);
-        navigate("/dashboardhome");
     };
 
     useEffect(() => {

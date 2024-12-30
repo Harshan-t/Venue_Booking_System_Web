@@ -157,13 +157,13 @@ class AdminController {
     //                 subject: `Booking Rejected for ${booking.Venue_Name}`,
     //                 text: `
     //                     Dear ${booking.Staff},
-                    
+
     //                     Your booking request for the venue "${booking.Venue_Name}" on ${new Date(booking.Booking_Date).toLocaleDateString()} has been rejected.
-                        
+
     //                     Reason for rejection: ${reason}
-                    
+
     //                     If you have any further questions, feel free to contact us.
-                    
+
     //                     Regards,
     //                     Venue Booking Team
     //                 `,
@@ -194,13 +194,13 @@ class AdminController {
     //                     subject: `Booking Rejected for ${rejected.Venue_Name}`,
     //                     text: `
     //                         Dear ${rejected.Staff},
-    
+
     //                         Your booking request for the venue "${rejected.Venue_Name}" on ${new Date(rejected.Booking_Date).toLocaleDateString()} has been rejected because another booking was approved.
-    
+
     //                         Please try booking another venue for the requested date.
-    
+
     //                         If you have any further questions, feel free to contact us.
-    
+
     //                         Regards,
     //                         Venue Booking Team
     //                     `,
@@ -237,28 +237,28 @@ class AdminController {
     updateBookings = async (req, res) => {
         const { id } = req.params;
         const { status, reason } = req.body;
-    
+
         // Validation for status
         if (status !== 'Approved' && status !== 'Rejected') {
             return res.status(400).json({ message: 'Invalid status value' });
         }
-    
+
         // Rejection reason check
         if (status === 'Rejected' && !reason) {
             return res.status(400).json({ message: 'Rejection reason is required when status is Rejected' });
         }
-    
+
         try {
             // Fetch booking details from the database
             const bookingQuery = "SELECT * FROM VenueBookings WHERE id = ?";
             const [bookingResult] = await db.query(bookingQuery, [id]);
-    
+
             if (bookingResult.length === 0) {
                 return res.status(404).json({ message: 'Booking not found' });
             }
-    
+
             const booking = bookingResult[0];
-    
+
             // Send rejection email if status is 'Rejected'
             if (status === 'Rejected') {
                 const mailOptions = {
@@ -278,7 +278,7 @@ class AdminController {
                         Venue Booking Team
                     `,
                 };
-    
+
                 // Send the rejection email
                 try {
                     await transporter.sendMail(mailOptions);
@@ -287,23 +287,46 @@ class AdminController {
                     console.error(`Error sending email to ${booking.email}:`, emailError);
                 }
             }
-    
+
             // Handle the case when status is 'Approved' and check for duplicate bookings
             if (status === 'Approved') {
+
+                const acceptMail = {
+                    from: "vijaykrishnaa.cs23@bitsathy.ac.in",
+                    to: booking.email,
+                    subject: `Booking Accepted for ${booking.Venue_Name}`,
+                    text: `
+                            Dear ${booking.Staff},
+    
+                            Your booking request for the venue "${booking.Venue_Name}" on ${new Date(booking.Booking_Date).toLocaleDateString()} has been approved.
+    
+                            If you have any further Queries, feel free to contact us.
+    
+                            Regards,
+                            Venue Booking Team
+                        `,
+                }
+                try {
+                    await transporter.sendMail(acceptMail);
+                    console.log(`Approval email sent to ${booking.email} successfully`);
+                } catch (emailError) {
+                    console.error(`Error sending email to ${booking.email}:`, emailError);
+                }
+
                 const rejectDuplicatesQuery = `
                     UPDATE VenueBookings 
                     SET Status = 'Rejected', rejection_reason = 'Another booking was approved'
                     WHERE Venue_Name = ? AND Booking_Date = ? AND id != ? AND Status != 'Rejected' AND ((From_Time >= ? AND From_Time <= ?) OR (To_Time >= ? AND To_Time <= ?))
                 `;
                 await db.query(rejectDuplicatesQuery, [booking.Venue_Name, booking.Booking_Date, id, booking.From_Time, booking.To_Time, booking.From_Time, booking.To_Time]);
-    
+
                 const rejectedBookingsQuery = `
                     SELECT email, Staff, Venue_Name, Booking_Date 
                     FROM VenueBookings 
                     WHERE Venue_Name = ? AND Booking_Date = ? AND id != ? AND Status = 'Rejected'
                 `;
                 const [rejectedBookings] = await db.query(rejectedBookingsQuery, [booking.Venue_Name, booking.Booking_Date, id]);
-    
+
                 // Send rejection email for other rejected bookings
                 for (const rejected of rejectedBookings) {
                     const mailOptions = {
@@ -323,7 +346,7 @@ class AdminController {
                             Venue Booking Team
                         `,
                     };
-    
+
                     // Send the email for rejected bookings
                     try {
                         await transporter.sendMail(mailOptions);
@@ -333,7 +356,7 @@ class AdminController {
                     }
                 }
             }
-    
+
             // Update the booking status
             const updateQuery = `
                 UPDATE VenueBookings 
@@ -341,21 +364,17 @@ class AdminController {
                 WHERE id = ?
             `;
             const [result] = await db.query(updateQuery, [status, status === 'Rejected' ? reason : null, id]);
-    
+
             if (result.affectedRows === 0) {
                 return res.status(404).json({ message: 'Booking not found' });
             }
-    
+
             res.json({ message: 'Booking status updated successfully' });
         } catch (error) {
             console.error("Error updating status:", error);
             res.status(500).json({ message: "An error occurred while updating the status" });
         }
     };
-    
-
-
-
 
     getQueries = async (req, res) => {
         const query = "SELECT * FROM HELP";
