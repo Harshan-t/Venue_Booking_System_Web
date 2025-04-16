@@ -58,7 +58,7 @@ function BookVenue() {
     
 
     const CheckBooking = () => {
-        const booking = details.filter(detail => new Date(detail.Booking_Date).toLocaleDateString() === new Date(BookingDate).toLocaleDateString() && detail.Venue_Name === Venue && (detail.From_Time.slice(0, 5) >= st_time && detail.From_Time.slice(0, 5) < ed_time) || (detail.To_Time.slice(0, 5) >st_time && detail.To_Time.slice(0, 5) < ed_time))
+        const booking = details.filter(detail => new Date(detail.Booking_Date).toLocaleDateString() === new Date(BookingDate).toLocaleDateString() && detail.Venue_Name === Venue && ((detail.From_Time.slice(0, 5) >= st_time && detail.From_Time.slice(0, 5) < ed_time) || (detail.To_Time.slice(0, 5) >st_time && detail.To_Time.slice(0, 5) < ed_time)))
         console.log(BookingDate);
         
         
