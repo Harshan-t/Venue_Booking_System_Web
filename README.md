@@ -20,7 +20,7 @@ This is the **frontend application** for the **Venue Booking System**, a platfor
 - **API Communication**: Axios or Fetch
 
 ## 📂 Project Structure
-
+```
 Venue_Booking_System_Web/
 ├── public/ # Static assets
 ├── src/
@@ -33,7 +33,7 @@ Venue_Booking_System_Web/
 ├── tailwind.config.js # Tailwind CSS configuration
 ├── postcss.config.js # PostCSS configuration
 ├── vite.config.js # Vite configuration
-
+```
 
 ## 🔧 Installation
 
